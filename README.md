@@ -6,6 +6,8 @@
 
 - Let's Encript certs will be automated by a complementary container in the reverse proxy service.
 
+- If just basic http roundcube webmail is needed check "basic" branch
+
 # Setup
 
 1- Create dedicated network for services to run
