@@ -13,8 +13,8 @@ services:
     environment:
       - ROUNDCUBEMAIL_DB_TYPE=sqlite
       - ROUNDCUBEMAIL_SKIN=elastic
-      - ROUNDCUBEMAIL_DEFAULT_HOST=tls://${MAIL_SERVER} #IMAPS endpoint
-      - ROUNDCUBEMAIL_SMTP_SERVER=tls://${MAIL_SERVER}  #SMTP endpoint
+      - ROUNDCUBEMAIL_DEFAULT_HOST=tls://${IMAP_SERVER} #IMAPS endpoint
+      - ROUNDCUBEMAIL_SMTP_SERVER=tls://${SMTP_SERVER}  #SMTP endpoint
       - ROUNDCUBEMAIL_USERNAME_DOMAIN=${DOMAIN}
       - ROUNDCUBE_AUTOCOMPLETE_ADDRESS_BOOK_HOST=${ROUNDCUBE_AUTOCOMPLETE_ADDRESS_BOOK_HOST}
       - ROUNDCUBE_AUTOCOMPLETE_ADDRESS_BOOK_BASE_DN=${ROUNDCUBE_AUTOCOMPLETE_ADDRESS_BOOK_BASE_DN}
@@ -24,8 +24,8 @@ services:
     image: nginx:latest
     container_name: roundcubenginx
     restart: unless-stopped
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     depends_on:
       - roundcube
     links:
@@ -35,4 +35,7 @@ services:
       - ./nginx/templates:/etc/nginx/templates
       - ./nginx/conf.d:/etc/nginx/conf.d
     environment:
+      - VIRTUAL_HOST=${VHOST_FQDN}
+      - LETSENCRYPT_HOST=${VHOST_FQDN}
+      - LETSENCRYPT_EMAIL=${MAIL_ADMIN_USERNAME}@${DOMAIN}
       - NGINX_PHP_CGI=roundcube:9000  # same as roundcubemail container name
